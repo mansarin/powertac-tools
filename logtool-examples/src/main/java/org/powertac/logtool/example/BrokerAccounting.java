@@ -68,7 +68,7 @@ import org.powertac.logtool.ifc.Analyzer;
  * followed by the broker's CashPosition. Line continues with the next broker
  * unless the per-broker option is given.
  * 
- * Usage: BrokerMktPrices [--per-broker] state-log-filename output-data-filename
+ * Usage: BrokerAccounting [--per-broker] state-log-filename output-data-filename
  * 
  * @author John Collins
  */
@@ -234,7 +234,6 @@ implements Analyzer
   public void handleMessage (SimStart start)
   {
     System.out.println("SimStart");
-    firstLine();
     started = true;
   }
 
@@ -387,10 +386,13 @@ implements Analyzer
   public void handleMessage (TimeslotUpdate tu)
   {
     if (started)
-      if (skip == 0)
+      if (skip == 0) {
         summarizeTimeslot();
-      else
+      }
+      else {
         skip -= 1;
+        firstLine();
+      }
     timeslot = tu.getFirstEnabled() -
         Competition.currentCompetition().getDeactivateTimeslotsAhead();
   }
